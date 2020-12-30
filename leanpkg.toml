@@ -1,0 +1,8 @@
+[package]
+name = "jaccard"
+version = "0.1"
+lean_version = "leanprover-community/lean:3.23.0"
+path = "src"
+
+[dependencies]
+mathlib = {git = "https://github.com/leanprover-community/mathlib", rev = "7c6020f18f861c64881c937e1d4778b55b73d39e"}
