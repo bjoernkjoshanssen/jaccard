@@ -51,9 +51,10 @@ section jaccard_nid
 
 variables {α : Type*} [decidable_eq α]
 --#check δ
+
+/-- using Lean's "group with zero" to hand the case 0/0=0 -/
 noncomputable def D : ℝ → ℝ → finset α → (finset α → ℝ) :=
   λ m M x y, (δ m M x y) / (|x ∩ y| + δ m M x y)
-  -- using Lean's "group with zero" to hand the case 0/0=0
 
 
 
@@ -294,7 +295,7 @@ theorem intersect_cases (m M : ℝ) (Y Z : finset α) (hm: 0<m) (hM: m≤ M) (hy
 
 lemma four_immediate_from (m M : ℝ) (X Y Z : finset α)
   (hm: 0 < m) (hM: m ≤ M) (h1M: 1 ≤ M)
-  (hx: X ≠ ∅) (hy: Y ≠ ∅) (hz: Z ≠ ∅):
+  (hx: X ≠ ∅) (hz: Z ≠ ∅):
   let axy := (|X ∩ Y|:ℝ), dxz := δ m M X Z, dyz := δ m M Z Y,
       axz := (|X ∩ Z|:ℝ), denom := axy+dxz+dyz in
 
@@ -337,12 +338,12 @@ lemma four_immediate_from (m M : ℝ) (X Y Z : finset α)
 
  lemma four_immediate_from_and  (m M : ℝ) (X Y Z : finset α)
   (hm: 0 < m) (hM: m ≤ M) (h1M: 1 ≤ M)
-  (hx: X ≠ ∅) (hy: Y ≠ ∅) (hz: Z ≠ ∅):
+  (hy: Y ≠ ∅) (hz: Z ≠ ∅):
   (δ m M Z Y)/((|X ∩ Y|:ℝ) + δ m M X Z + δ m M Z Y) ≤ (δ m M Z Y)/((|Z ∩ Y|:ℝ) + δ m M Z Y) :=
   
   let dzy := δ m M Z Y, dyz := δ m M Y Z, dxz := δ m M X Z, dzx := δ m M Z X in
   have S: (dyz) / ((|Y ∩ X|:ℝ) + (dyz) + (dzx)) ≤ (dyz) / ((|Y ∩ Z|:ℝ) + dyz), from
-    four_immediate_from m M Y X Z hm hM h1M hy hx hz,
+    four_immediate_from m M Y X Z hm hM h1M hy hz,
   have dzy_comm: dzy = dyz, from delta_comm,
   have dxz_comm: dxz = dzx, from delta_comm,
   have ring_in_denom: (|Y ∩ X|:ℝ) + dzx + dyz = (|Y ∩ X|:ℝ) + dyz + dzx, by ring,
@@ -437,11 +438,11 @@ let axy := (|X ∩ Y| : ℝ), dxy := δ m M X Y, dxz := δ m M X Z, dzy := δ m 
     (dxz+dyz)/denom = dxz/denom + dyz/denom: add_div dxz dyz denom
                 ... ≤ dxz/(axz + dxz)   + dyz/denom:
                 add_le_add_right
-                (four_immediate_from m M X Y Z hm hM h1M hx hy hz)
+                (four_immediate_from m M X Y Z hm hM h1M hx hz)
                 ((dyz)/denom)
                 ... ≤ dxz/(axz + dxz)   + dyz/(ayz + dyz)  :
                 add_le_add_left
-                (four_immediate_from_and m M X Y Z hm hM h1M hx hy hz)
+                (four_immediate_from_and m M X Y Z hm hM h1M hy hz)
                 (dxz/(axz + dxz)),
     le_trans three four
 

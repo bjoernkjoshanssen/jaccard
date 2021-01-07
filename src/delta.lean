@@ -32,6 +32,7 @@ local notation |X| := X.card
 -- Kyle Miller (start) although proofs of disj1, disj2 due to K-H
 
 variables {α : Type*} [decidable_eq α]
+variables {β : Type*}
 
 lemma disj₁ (X Y Z : finset α) : disjoint ((X \ Y) ∪ (Y \ Z)) (Z \ X) := by { rw disjoint_iff, tidy}
 lemma disj₂ (X Y Z : finset α) : disjoint (X \ Y) (Y \ Z) := by { rw disjoint_iff, tidy}
@@ -61,6 +62,7 @@ lemma card_rot_cast (X Y Z : finset α) : ((|X\Y| + |Y\Z| + |Z\X|):ℝ) = ((|X\Z
 variables {m M : ℝ}
 set_option profiler true
 
+/-- The function δ is a stepping stone towards Jaccard inequality. It is not normalized to be between 0 and 1. -/
 def δ : ℝ → ℝ → finset α → (finset α → ℝ) :=
     λ m M A B, M * ↑ (max (|A\B|) (|B\A|)) + m * ↑ (min (|A\B|) (|B\A|))
 
@@ -95,7 +97,7 @@ lemma subseteq_of_card_zero (x y : finset α) : |x \ y| = 0 → x ⊆ y :=
     (iff.elim_left finset.sdiff_eq_empty_iff_subset) v
     
 
-lemma card_zero_of_not_pos (X : finset α) : ¬ 0 < |X| → |X| = 0 :=
+lemma card_zero_of_not_pos (X : finset β) : ¬ 0 < |X| → |X| = 0 :=
     λ h: ¬ 0 < |X|,
     eq.symm ((iff.elim_right eq_iff_le_not_lt) (and.intro (nat.zero_le (|X|)) h))
 
@@ -231,6 +233,7 @@ theorem mul_sdiff_tri (m : ℝ) (hm: 0 ≤ m) (X Y Z : finset α):
        ≤ m * ↑ ((|X\Y|) + (|Y\Z|)) : mul_le_mul_of_nonneg_left (casting(sdiff_triangle X Y Z)) hm
    ... = m * ((|X\Y|:ℝ) + (|Y\Z|:ℝ)): by norm_cast
  
+/-- The triangle inequality for δ -/ 
 def triangle_inequality (m M :ℝ) (X Y Z: finset α) : Prop :=
     δ m M X Y ≤ δ m M X Z + δ m M Z Y
 
@@ -259,7 +262,7 @@ lemma seventeen_right_yzx {m M :ℝ} {X Y Z: finset α} :
           ... ≤ M * (x_z + z_y) + m * (y_z + z_x)         : add_le_add_right mst_xzy (m * ((y_z) + (z_x)))
           ... = (M * x_z + m * z_x) + (M * z_y + m * y_z) : by ring
           ... = δ m M X Z                     + δ m M Z Y : by rw[dxz,dzy]
-
+#lint
 
 lemma co_sdiff (X Y U : finset α):
 X ⊆ U → Y ⊆ U → (U\X)\(U\Y) = Y\X :=
