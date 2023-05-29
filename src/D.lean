@@ -42,7 +42,7 @@ See [KNYHLM20] for the original proof (https://math.hawaii.edu/~bjoern/nid-walco
 
 open finset
 
-local notation |X| := X.card
+local notation (name := X.card) |X| := X.card
 
 variables {m M : ℝ} -- in delta.lean but can't import variables
 
@@ -76,7 +76,7 @@ let z_y := |Z \ Y|, y_z := |Y \ Z|, y := |Y|, z := |Z| in
                        ... = |X ∩ Y| + max z_y y_z : by rw[max_eq_left (sdiff_card Z Y h)]
 )(
   λ h: ¬ y ≤ z,
-  have h1: z ≤ y, from le_of_lt ((iff.elim_right lt_iff_not_ge') h),
+  have h1: z ≤ y, from le_of_lt ((lt_iff_not_ge _ _).mpr h),
   have h_diff: z_y ≤ y_z, from sdiff_card Y Z h1, let
     x110 := |X ∩ Y \ Z|, x111 := |X ∩ Y ∩ Z|, x010 := |Y \ X \ Z|,
     x111 := |X ∩ Y ∩ Z|, x101 := |X ∩ Z \ Y|, xz := |X ∩ Z|,
@@ -137,7 +137,7 @@ theorem delta_nonneg {x y : finset α} (hm: 0 ≤ m) (hM: m ≤ M): 0 ≤ δ m M
        0 = δ m M x x: by rw[delta_self]
      ... ≤ δ m M x y + δ m M y x: seventeen_right hm hM 
      ... = 2 * δ m M x y: by rw [delta_comm, two_mul],
-  nonneg_of_mul_nonneg_left this zero_lt_two
+  nonneg_of_mul_nonneg_right this zero_lt_two
 
 theorem jn_comm (X Y : finset α): D m M X Y = D m M Y X :=
     show (δ m M X Y) / (|X ∩ Y| + δ m M X Y)  = (δ m M Y X) / (|Y ∩ X| + δ m M Y X), from
@@ -171,7 +171,7 @@ have hc: 0 ≤ δ m M X Y, from delta_nonneg hm hM,
   λ hd: 0 < (|X ∩ Y|:ℝ) + δ m M X Y,
   calc
     0 = 0         / ((|X ∩ Y|:ℝ) + δ m M X Y) : by rw[zero_div]
-  ... ≤ δ m M X Y / ((|X ∩ Y|:ℝ) + δ m M X Y) : div_le_div hc hc hd (by apply_rules le_refl)
+  ... ≤ δ m M X Y / ((|X ∩ Y|:ℝ) + δ m M X Y) : div_le_div hc hc hd (le_refl _)
 )(
   λ hd: ¬ 0 < (|X ∩ Y|:ℝ) + δ m M X Y,  -- in this case, X = Y = ∅
   have hd2: 0 ≤ (|X ∩ Y|:ℝ) + δ m M X Y, from D_denom_nonneg X Y hm hM,
@@ -214,17 +214,6 @@ dxy / (|X ∩ Y| + dxy) = (δ m M Y X)/(|Y ∩ X| + δ m M Y X) : by rw[delta_co
                   ... = 1                                 : D_empty_1 m M hm hM hy hx
 
 
-lemma div_self_le_one (a:ℝ): a/a ≤ 1 :=
-(em (a=0)).elim(
-  λ h: a = 0, calc
-    a/a = a/0: by rw[h]
-    ... = 0  : div_zero a
-    ... ≤ 1  : zero_le_one
-)(
-  λ h: a ≠ 0,
-  calc a/a = 1: div_self h
-  ... ≤ 1: le_refl 1
-)
 
 theorem D_bounded (m M : ℝ) (X Y : finset α) (hm: 0 ≤ m) (hM: m ≤ M): D m M X Y ≤ 1
   :=
@@ -401,11 +390,11 @@ lemma abc_lemma {a b c : ℝ} (h : 0 ≤ a) (hb : a ≤ b) (hc : 0 ≤ c) : (a/(
         (iff.elim_right (div_le_div_iff h6 h7)) numer
   )
 
-theorem three (X Y Z : finset α) (hm: 0 < m) (hM: m ≤ M):
+theorem three (X Y Z : finset ℕ) (hm: 0 < m) (hM: m ≤ M):
 let axy := (|X ∩ Y| : ℝ), dxy := δ m M X Y, dxz := δ m M X Z,
     dyz := δ m M Z Y, denom := (axy+dxz+dyz) in
 
-dxy/(axy + dxy) ≤ (dxz+dyz)/denom :=
+  dxy/(axy + dxy) ≤ (dxz+dyz)/denom :=
 
 let axy := (|X ∩ Y| : ℝ), dxy := δ m M X Y, dxz := δ m M X Z, dzy := δ m M Y Z, dyz := δ m M Z Y,
     axy := (|X ∩ Y| : ℝ), denom := (axy+dxz+dyz) in
@@ -414,7 +403,7 @@ let axy := (|X ∩ Y| : ℝ), dxy := δ m M X Y, dxz := δ m M X Z, dzy := δ m 
   have h0 : δ m M Z Y = δ m M Y Z , by rw delta_comm,
   have h1 : dxy ≤ dxz + dzy, from calc
     dxy ≤ dxz + δ m M Z Y: delta_triangle X Z Y hm hM
-    ... = dxz + δ m M Y Z: by rw h0,
+    ... = dxz + δ m M Y Z: by {rw h0,},
   have h2: dxz + dyz + axy = axy + dxz + dyz, by ring,
     calc  dxy / (axy + dxy)
         = dxy / (dxy + axy)                           : by rw add_comm axy dxy
@@ -424,7 +413,7 @@ let axy := (|X ∩ Y| : ℝ), dxy := δ m M X Y, dxz := δ m M X Z, dzy := δ m 
 
 
  theorem jn_triangle_nonempty
-  (m M : ℝ) (X Y Z : finset α) (hm: 0 < m) (hM: m ≤ M) (h1M: 1 ≤ M)
+  (m M : ℝ) (X Y Z : finset ℕ) (hm: 0 < m) (hM: m ≤ M) (h1M: 1 ≤ M)
   (hx: X ≠ ∅) (hy: Y ≠ ∅) (hz: Z ≠ ∅): D m M X Y ≤ D m M X Z + D m M Z Y :=
   let dxy := (δ m M X Y), axy := (|X ∩ Y|:ℝ), dxz := δ m M X Z,
     dyz :=  (δ m M Z Y), ayz := (|Z ∩ Y|:ℝ), axz := (|X ∩ Z|:ℝ),
@@ -446,7 +435,7 @@ let axy := (|X ∩ Y| : ℝ), dxy := δ m M X Y, dxz := δ m M X Z, dzy := δ m 
                 (dxz/(axz + dxz)),
     le_trans three four
 
-theorem jn_triangle (m M : ℝ) (X Y Z : finset α)
+theorem jn_triangle (m M : ℝ) (X Y Z : finset ℕ)
 (hm: 0 < m) (hM: m ≤ M) (h1M: 1 ≤ M): D m M X Y ≤ D m M X Z + D m M Z Y :=
 let dxz := D m M X Z in
     (em (X=∅)).elim(
@@ -514,7 +503,7 @@ let dxz := D m M X Z in
     )
 
 noncomputable instance jaccard_nid.metric_space
-(hm : 0 < m) (hM : m ≤ M) (h1M: 1 ≤ M): metric_space (finset α) := {
+(hm : 0 < m) (hM : m ≤ M) (h1M: 1 ≤ M): metric_space (finset ℕ) := {
         dist               := λx y, D m M x y,
         dist_self          := jn_self,
         eq_of_dist_eq_zero := eq_of_jn_eq_zero hm hM,
