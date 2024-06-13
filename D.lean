@@ -9,20 +9,10 @@ Code contribution and definition of D improvement from:
 
 Lean 4 version from 2024.
 -/
--- import data.Finset  -- finite set
--- import data.set -- to make backslash work as set difference
-import Mathlib.Data.Finset.Basic
--- import topology.metric_space.basic
 
--- import data.real.basic
+import Mathlib.Data.Finset.Basic
 
 import Myproject.delta
-
--- import data.set.basic
-
---set_option profiler true
-
---set_option pp.all true -- this makes tactic proofs look weird, like has_mem.mem instead of just ∈
 
 /-!
 # A theorem on metrics based on min and max
@@ -30,7 +20,7 @@ In this file we give a formal proof that in terms of
 d(X,Y)= m min(|X\Y|, |Y\X|) + M max(|X\Y|, |Y\X|)
 the function
 D(X,Y) = d(X,Y)/(|X ∩ Y|+d(X,Y))
-is a metric if and only if m ≤ M and 1 ≤ M.
+is a metric if 0 < m ≤ M and 1 ≤ M.
 In particular, taking m=M=1, the Jaccard distance is a metric on Finset ℕ.
 ## Main results
 - `noncomputable instance jaccard_nid.metric_space`: the proof of the main result described above.
@@ -38,7 +28,7 @@ In particular, taking m=M=1, the Jaccard distance is a metric on Finset ℕ.
 ## Notation
  - `|_|` : Notation for cardinality.
 ## References
-See [KNYHLM20] for the original proof (https://math.hawaii.edu/~bjoern/nid-walcom.pdf).
+For the original proof see https://arxiv.org/abs/2111.02498
 -/
 
 open Finset
