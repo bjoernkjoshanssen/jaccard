@@ -6,14 +6,10 @@ Zulip chat help from:
 Johan Commelin, Kyle Miller, Pedro Minicz, Reid Barton, Scott Morrison, Heather Macbeth.
 This is a Lean 4 version of the 2020 project.
 -/
--- import tactic.ring2
--- import data.Finset  -- finite set
--- import data.set -- to make backslash work as set difference
+
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Real.Basic
 import Mathlib.Topology.MetricSpace.Basic
-import Mathlib.Topology.MetricSpace.PseudoMetric
--- import data.real.basic
 
 /-!
 # A theorem on metrics based on min and max
