@@ -12,7 +12,7 @@ Lean 4 version from 2024.
 
 import Mathlib.Data.Finset.Basic
 
-import Myproject.delta
+import Jaccard.delta
 
 /-!
 # A theorem on metrics based on min and max
