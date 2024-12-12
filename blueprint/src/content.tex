@@ -5,3 +5,75 @@
 % If you want to split the blueprint content into several files then
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
+This project contains excerpt from the paper \emph{Interpolating between the Jaccard distance and an analogue of the normalized information distance}. That paper is unique in that a majority of the results were formalized at the time of publication.
+Therefore it is especially suitable for a Lean blueprint project.
+
+
+\paragraph{Abstract.} Jim{\'e}nez, Becerra, and Gelbukh (2013) defined a family of ``symmetric Tversky ratio models'' $S_{\alpha,\beta}$, $0\le\alpha\le 1$, $\beta>0$. Each function $D_{\alpha,\beta}=1-S_{\alpha,\beta}$ is a semimetric on the powerset of a given finite set.
+
+We show that $D_{\alpha,\beta}$ is a metric if and only if $0\le\alpha \le \frac12$ and $\beta\ge 1/(1-\alpha)$.
+This result is formally verified in the Lean proof assistant.
+
+The extreme points of this parametrized space of metrics are
+$\mathcal V_1=D_{1/2,2}$, the Jaccard distance, and
+$\mathcal V_{\infty}=D_{0,1}$, an analogue of the normalized information distance of M.~Li, Chen, X.~Li, Ma, and Vit\'anyi (2004).
+
+As a second interpolation, in general we also show that $\mathcal V_p$ is a metric, $1\le p\le\infty$, where
+\[
+\Delta_p(A,B)=(\abs{B\setminus A}^p+\abs{A\setminus B}^p)^{1/p},
+\]
+\[
+\mathcal V_p(A,B)=\frac{\Delta_p(A,B)}{\abs{A\cap B} + \Delta_p(A,B)}.
+\]
+\section{Introduction}
+		Distance measures (metrics), are used in a wide variety of scientific contexts.
+		In bioinformatics, M.~Li, Badger, Chen, Kwong, and Kearney \cite{Li2001AnIS} introduced an information-based sequence distance.
+		In an information-theoretical setting, M.~Li, Chen, X.~Li, Ma and Vit{\'a}nyi \cite{MR2103495} rejected the distance of \cite{Li2001AnIS} in favor of a
+		\emph{normalized information distance} (NID).
+		The Encyclopedia of Distances \cite{MR3559482} describes the NID on page 205 out of 583, as
+		\[
+			\frac{
+				\max\{
+					K(x\mid y^*),K(y\mid x^*)
+				\}
+			}{
+				\max\{
+					K(x),K(y)
+				\}
+			}
+		\]
+		where $K(x\mid y^*)$ is the Kolmogorov complexity of $x$ given a shortest program $y^*$ to compute $y$.
+		It is equivalent to be given $y$ itself in hard-coded form:
+		\[
+			\frac{
+				\max\{
+					K(x\mid y),K(y\mid x)
+				\}
+			}{
+				\max\{
+					K(x),K(y)
+				\}
+			}
+		\]
+		Another formulation (see \cite[page 8]{MR2103495}) is
+		\[
+			\frac{K(x,y)-\min\{K(x),K(y)\}}{\max\{K(x),K(y)\}}.
+		\]
+
+		The fact that the NID is in a sense a normalized metric is proved in~\cite{MR2103495}.
+		Then in 2017, while studying malware detection, Raff and Nicholas \cite{Raff2017AnAT} suggested Lempel--Ziv Jaccard distance (LZJD) as a practical alternative to NID.
+		As we shall see, this is a metric.
+		In a way this constitutes a full circle: the distance in \cite{Li2001AnIS} is itself essentially a Jaccard distance,
+		and the LZJD is related to it as Lempel--Ziv complexity is to Kolmogorov complexity.
+		In the present paper we aim to shed light on this back-and-forth by showing that
+		the NID and Jaccard distances constitute the endpoints of a parametrized family of metrics.
+
+
+		For comparison, the Jaccard distance between two sets $X$ and $Y$, and our analogue of the NID, are as follows:
+		\begin{eqnarray}
+			J_1(X,Y)&=&\frac{\abs{X\setminus Y}+\abs{Y\setminus X}}{\abs{X\cup Y}} = 1 - \frac{\abs{X\cap Y}}{\abs{X\cup Y}}\\
+			J_{\infty}(X,Y)&=&\frac{\max\{\abs{X\setminus Y}, \abs{Y\setminus X}\}}{\max\{\abs{X},\abs{Y}\}}\label{setNID}
+		\end{eqnarray}
+
+\bibliographystyle{plain}
+\bibliography{nid}
