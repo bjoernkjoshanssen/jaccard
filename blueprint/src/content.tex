@@ -128,7 +128,9 @@ As a second interpolation, in general we also show that $\mathcal V_p$ is a metr
 		proposed in \cite{DBLP:conf/starsem/JimenezBG13}.
 
 		\subsection{Generalities about metrics}
-		\begin{definition}\label{october2020}
+		\begin{definition}\label{def:metric}
+			\lean{MetricSpace}
+			\leanok
 		Let $\mathcal X$ be a set.
 			A \emph{metric} on $\mathcal X$ is a function
 			$d : \mathcal X \times \mathcal X \to \mathbb R$ such that
@@ -141,7 +143,7 @@ As a second interpolation, in general we also show that $\mathcal V_p$ is a metr
 			for all $x,y,z\in\mathcal X$.
 			If $d$ satisfies \Cref{met-nonneg}, \Cref{met-0}, \Cref{met-symm} but not necessarily \Cref{met-tri} then $d$ is called a \emph{semimetric}.
 		\end{definition}
-		A basic exercise in \Cref{october2020} that we will make use of is \Cref{lin-comb-metric}.
+		A basic exercise in \Cref{def:metric} that we will make use of is \Cref{lin-comb-metric}.
 		\begin{theorem}\label{lin-comb-metric}
 			 If $d_1$ and $d_2$ are metrics and $a,b$ are nonnegative constants, not both zero, then $ad_1+bd_2$ is a metric.
 		\end{theorem}
@@ -185,6 +187,8 @@ As a second interpolation, in general we also show that $\mathcal V_p$ is a metr
 		\end{proof}
         \subsection{Metrics on a family of finite sets}
         \begin{lemma}\label{union-bound}
+			\lean{sdiff_triangle'}
+			\leanok
             For sets $A,B,C$, we have
             $\abs{A\setminus B}\le \abs{A\setminus C}+\abs{C\setminus B}$.
         \end{lemma}
